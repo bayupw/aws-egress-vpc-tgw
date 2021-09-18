@@ -1,0 +1,5 @@
+access_key = "<AWS Access Key>"
+secret_key = "<AWS Secret Key>"
+region     = "us-east-1"
+keypair_name = "<EC2 Keypair in us-east-1 region>"
+my_public_ip = "<Your Public IP>"

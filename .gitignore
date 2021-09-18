@@ -1,0 +1,8 @@
+env.tf
+.terraform/
+.terraform.lock.hcl
+access_token.tf
+terraform.tfvars
+terraform.tfstate
+terraform.tfstate.backup
+bayuw-terraform-02ae8f281796.json
