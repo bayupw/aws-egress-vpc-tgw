@@ -10,38 +10,38 @@ resource "aws_ec2_transit_gateway" "TGW-Internet" {
 
 
 resource "aws_ec2_transit_gateway_vpc_attachment" "Egress-Attachment" {
-  subnet_ids         = [resource.aws_subnet.Egress-VPC_private_subnets[0].id,resource.aws_subnet.Egress-VPC_private_subnets[1].id]
-  transit_gateway_id = aws_ec2_transit_gateway.TGW-Internet.id
-  vpc_id             = resource.aws_vpc.vpc_name["Egress-VPC"].id
+  subnet_ids                                      = [resource.aws_subnet.Egress-VPC_private_subnets[0].id, resource.aws_subnet.Egress-VPC_private_subnets[1].id]
+  transit_gateway_id                              = aws_ec2_transit_gateway.TGW-Internet.id
+  vpc_id                                          = resource.aws_vpc.vpc_name["Egress-VPC"].id
   transit_gateway_default_route_table_propagation = false
   transit_gateway_default_route_table_association = false
 
   tags = {
-      Name = "Egress-Attachment"
+    Name = "Egress-Attachment"
   }
 }
 
 resource "aws_ec2_transit_gateway_vpc_attachment" "App1-Attachment" {
-  subnet_ids         = [resource.aws_subnet.App1-VPC_private_subnets[0].id,resource.aws_subnet.App1-VPC_private_subnets[1].id]
-  transit_gateway_id = aws_ec2_transit_gateway.TGW-Internet.id
-  vpc_id             = resource.aws_vpc.vpc_name["App1-VPC"].id
+  subnet_ids                                      = [resource.aws_subnet.App1-VPC_private_subnets[0].id, resource.aws_subnet.App1-VPC_private_subnets[1].id]
+  transit_gateway_id                              = aws_ec2_transit_gateway.TGW-Internet.id
+  vpc_id                                          = resource.aws_vpc.vpc_name["App1-VPC"].id
   transit_gateway_default_route_table_propagation = false
   transit_gateway_default_route_table_association = false
 
   tags = {
-      Name = "App1-Attachment"
+    Name = "App1-Attachment"
   }
 }
 
 resource "aws_ec2_transit_gateway_vpc_attachment" "App2-Attachment" {
-  subnet_ids         = [resource.aws_subnet.App2-VPC_private_subnets[0].id,resource.aws_subnet.App2-VPC_private_subnets[1].id]
-  transit_gateway_id = aws_ec2_transit_gateway.TGW-Internet.id
-  vpc_id             = resource.aws_vpc.vpc_name["App2-VPC"].id
+  subnet_ids                                      = [resource.aws_subnet.App2-VPC_private_subnets[0].id, resource.aws_subnet.App2-VPC_private_subnets[1].id]
+  transit_gateway_id                              = aws_ec2_transit_gateway.TGW-Internet.id
+  vpc_id                                          = resource.aws_vpc.vpc_name["App2-VPC"].id
   transit_gateway_default_route_table_propagation = false
   transit_gateway_default_route_table_association = false
 
   tags = {
-      Name = "App2-Attachment"
+    Name = "App2-Attachment"
   }
 }
 
@@ -51,16 +51,16 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "App2-Attachment" {
 resource "aws_ec2_transit_gateway_route_table" "Egress-RouteTable" {
   transit_gateway_id = aws_ec2_transit_gateway.TGW-Internet.id
 
-    tags = {
-      Name = "Egress-RouteTable"
+  tags = {
+    Name = "Egress-RouteTable"
   }
 }
 
 resource "aws_ec2_transit_gateway_route_table" "App-RouteTable" {
   transit_gateway_id = aws_ec2_transit_gateway.TGW-Internet.id
 
-    tags = {
-      Name = "App-RouteTable"
+  tags = {
+    Name = "App-RouteTable"
   }
 }
 
@@ -85,7 +85,7 @@ resource "aws_ec2_transit_gateway_route" "default_App-RouteTable_Egress-VPC" {
 #Add these additional routes: 192.168.0.0/16, 172.16.0.0/12 and 10.0.0.0/8 as Blackhole to make sure VPCs can’t communicate with each other through the NAT gateway.
 
 resource "aws_ec2_transit_gateway_route" "blackhole_route" {
-count = length(var.blackhole_routes)
+  count                          = length(var.blackhole_routes)
   destination_cidr_block         = var.blackhole_routes[count.index]
   blackhole                      = true
   transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.App-RouteTable.id
@@ -125,7 +125,7 @@ resource "aws_default_route_table" "default_route_table_App1-VPC" {
 resource "aws_route" "default_route_App1-VPC" {
   route_table_id         = aws_default_route_table.default_route_table_App1-VPC.id
   destination_cidr_block = "0.0.0.0/0"
-  transit_gateway_id    = aws_ec2_transit_gateway.TGW-Internet.id
+  transit_gateway_id     = aws_ec2_transit_gateway.TGW-Internet.id
 }
 
 resource "aws_default_route_table" "default_route_table_App2-VPC" {
@@ -139,7 +139,7 @@ resource "aws_default_route_table" "default_route_table_App2-VPC" {
 resource "aws_route" "default_route_App2-VPC" {
   route_table_id         = aws_default_route_table.default_route_table_App2-VPC.id
   destination_cidr_block = "0.0.0.0/0"
-  transit_gateway_id    = aws_ec2_transit_gateway.TGW-Internet.id
+  transit_gateway_id     = aws_ec2_transit_gateway.TGW-Internet.id
 }
 
 # Edit the Egress-Public-RT route table associated with the Egress-VPC and add 10.0.0.0/16 and 10.1.0.0/16. Set TGW-Internet as the target.
@@ -147,11 +147,11 @@ resource "aws_route" "default_route_App2-VPC" {
 resource "aws_route" "ingress_route_Egress-VPC_App1-VPC" {
   route_table_id         = aws_route_table.Egress-Public-RT.id
   destination_cidr_block = var.vpc_cidr["App1-VPC"]
-  transit_gateway_id    = aws_ec2_transit_gateway.TGW-Internet.id
+  transit_gateway_id     = aws_ec2_transit_gateway.TGW-Internet.id
 }
 
 resource "aws_route" "ingress_route_Egress-VPC_App2-VPC" {
   route_table_id         = aws_route_table.Egress-Public-RT.id
   destination_cidr_block = var.vpc_cidr["App2-VPC"]
-  transit_gateway_id    = aws_ec2_transit_gateway.TGW-Internet.id
+  transit_gateway_id     = aws_ec2_transit_gateway.TGW-Internet.id
 }

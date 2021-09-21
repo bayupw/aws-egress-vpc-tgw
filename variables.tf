@@ -19,7 +19,8 @@ variable "vpc_cidr" {
 
 variable "blackhole_routes" {
   default = [
-    "192.168.0.0/16",
+# 192.168.0.0/16 is removed from blackhole routs for testing purpose
+#   "192.168.0.0/16",
     "172.16.0.0/12",
     "10.0.0.0/8"
   ]
@@ -58,7 +59,8 @@ variable "keypair_name" {}
 variable "my_public_ip" {}
 
 variable "linux2_ami" {
-  default = "ami-0a2232786115639d7"
+  description = "Amazon Linux 2 AMI (HVM) AMI ID"
+  default = "ami-087c17d1fe0178315"
 }
 
 variable "instance_type" {
